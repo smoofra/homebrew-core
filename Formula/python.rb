@@ -65,6 +65,8 @@ class Python < Formula
     end
   end
 
+  patch :DATA
+
   def lib_cellar
     prefix/"Frameworks/Python.framework/Versions/2.7/lib/python2.7"
   end
@@ -365,3 +367,26 @@ class Python < Formula
     system bin/"pip", "list"
   end
 end
+
+__END__
+diff --git a/setup.py b/setup.py
+index 54054c208a..098e1c19e4 100644
+--- a/setup.py
++++ b/setup.py
+@@ -427,7 +427,7 @@ class PyBuildExt(build_ext):
+         if not os.path.exists(self.build_temp):
+             os.makedirs(self.build_temp)
+         ret = os.system('%s -E -v - </dev/null 2>%s 1>/dev/null' % (gcc, tmpfile))
+-        is_gcc = False
++        is_gcc = True
+         in_incdirs = False
+         inc_dirs = []
+         lib_dirs = []
+@@ -458,7 +458,7 @@ class PyBuildExt(build_ext):
+         if not cross_compiling:
+             add_dir_to_list(self.compiler.library_dirs, '/usr/local/lib')
+             add_dir_to_list(self.compiler.include_dirs, '/usr/local/include')
+-        if cross_compiling:
++        if True:
+             self.add_gcc_paths()
+         self.add_multiarch_paths()
